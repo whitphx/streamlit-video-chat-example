@@ -8,6 +8,7 @@ from typing import List
 import av
 import cv2
 import numpy as np
+import streamlit as st
 from streamlit_server_state import server_state, server_state_lock
 from streamlit_webrtc import (
     ClientSettings,
@@ -82,9 +83,20 @@ class OpenCVFaceProcessor(VideoProcessorBase):
             str(cv2_path / "data/haarcascade_frontalface_alt2.xml")
         )
 
-        self._filter_bgra = imread_from_url(
-            "https://i.pinimg.com/originals/0c/c0/50/0cc050fd99aad66dc434ce772a0449a9.png"
-        )
+        self.filter_type = "ironman"
+        self._filters = {
+            "ironman": imread_from_url(
+                "https://i.pinimg.com/originals/0c/c0/50/0cc050fd99aad66dc434ce772a0449a9.png"
+            ),
+            "laughing_man": imread_from_url(
+                "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/3a17e5a4-9610-4fa3-a4bd-cb7d94d6f7e1/darwcty-d989aaf1-3cfa-4576-b2ac-305209346162.png/v1/fill/w_944,h_847,strp/laughing_man_logo_by_aggressive_vector_darwcty-pre.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9OTE5IiwicGF0aCI6IlwvZlwvM2ExN2U1YTQtOTYxMC00ZmEzLWE0YmQtY2I3ZDk0ZDZmN2UxXC9kYXJ3Y3R5LWQ5ODlhYWYxLTNjZmEtNDU3Ni1iMmFjLTMwNTIwOTM0NjE2Mi5wbmciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.5SDBnNZF6ktZM7Mk5gJfpHNQswRba3eqpvUn6FMHyW4"
+            ),
+            "cat": imread_from_url(
+                "https://i.pinimg.com/originals/29/cd/fd/29cdfdf2248ce2465598b2cc9e357579.png"
+            ),
+        }
+
+        self.draw_rect = False  # For debug
 
     def recv(self, frame: av.VideoFrame) -> av.VideoFrame:
         img = frame.to_ndarray(format="bgr24")
@@ -94,9 +106,20 @@ class OpenCVFaceProcessor(VideoProcessorBase):
             gray, scaleFactor=1.11, minNeighbors=3, minSize=(30, 30)
         )
 
+        overlay = self._filters[self.filter_type]
+
         for (x, y, w, h) in faces:
-            img = cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
-            overlay_bgra(img, self._filter_bgra, (x, y, w, h))
+            # Ad-hoc adjustment of the ROI for each filter type
+            if self.filter_type == "ironman":
+                roi = (x, y, w, h)
+            elif self.filter_type == "laughing_man":
+                roi = (x, y, int(w * 1.15), h)
+            elif self.filter_type == "cat":
+                roi = (x, y - int(h * 0.3), w, h)
+            overlay_bgra(img, overlay, roi)
+
+            if self.draw_rect:
+                img = cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
         return av.VideoFrame.from_ndarray(img, format="bgr24")
 
@@ -180,6 +203,12 @@ def main():
             processor_factory=OpenCVFaceProcessor,
         )
         mix_track.add_input_track(self_process_track)
+
+        self_process_track.processor.filter_type = st.radio(
+            "Select filter type",
+            ("ironman", "laughing_man", "cat"),
+            key="filter-type",
+        )
 
     with server_state_lock["webrtc_contexts"]:
         webrtc_contexts: OrderedDict = server_state["webrtc_contexts"]
