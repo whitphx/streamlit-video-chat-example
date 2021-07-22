@@ -1,5 +1,4 @@
 from streamlit_server_state import server_state, server_state_lock
-
 from streamlit_webrtc import ClientSettings, WebRtcMode, webrtc_streamer
 
 
