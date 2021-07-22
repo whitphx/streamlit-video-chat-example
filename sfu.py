@@ -1,3 +1,6 @@
+import urllib.request
+from pathlib import Path
+
 try:
     from typing import Literal
 except ImportError:
@@ -5,6 +8,7 @@ except ImportError:
 
 import av
 import cv2
+import numpy as np
 import streamlit as st
 from streamlit_server_state import server_state, server_state_lock
 from streamlit_webrtc import (
@@ -14,47 +18,106 @@ from streamlit_webrtc import (
     webrtc_streamer,
 )
 
+cv2_path = Path(cv2.__file__).parent
 
-class OpenCVVideoProcessor(VideoProcessorBase):
-    type: Literal["noop", "cartoon", "edges", "rotate"]
+
+def imread_from_url(url: str):
+    req = urllib.request.urlopen(url)
+    encoded = np.asarray(bytearray(req.read()), dtype="uint8")
+    image_bgra = cv2.imdecode(encoded, cv2.IMREAD_UNCHANGED)
+
+    return image_bgra
+
+
+def overlay_bgra(background: np.ndarray, overlay: np.ndarray, roi):
+    roi_x, roi_y, roi_w, roi_h = roi
+    roi_aspect_ratio = roi_w / roi_h
+
+    # Calc overlay x, y, w, h that cover the ROI keeping the original aspect ratio
+    ov_org_h, ov_org_w = overlay.shape[:2]
+    ov_aspect_ratio = ov_org_w / ov_org_h
+
+    if ov_aspect_ratio >= roi_aspect_ratio:
+        ov_h = roi_h
+        ov_w = int(ov_aspect_ratio * ov_h)
+        ov_y = roi_y
+        ov_x = int(roi_x - (ov_w - roi_w) / 2)
+    else:
+        ov_w = roi_w
+        ov_h = int(ov_w / ov_aspect_ratio)
+        ov_x = roi_x
+        ov_y = int(roi_y - (ov_h - roi_h) / 2)
+
+    resized_overlay = cv2.resize(overlay, (ov_w, ov_h))
+
+    # Cut out the pixels of the overlay image outside the background frame.
+    margin_x0 = -min(0, ov_x)
+    margin_y0 = -min(0, ov_y)
+    margin_x1 = max(background.shape[1], ov_x + ov_w) - background.shape[1]
+    margin_y1 = max(background.shape[0], ov_y + ov_h) - background.shape[0]
+
+    resized_overlay = resized_overlay[
+        margin_y0 : resized_overlay.shape[0] - margin_y1,
+        margin_x0 : resized_overlay.shape[1] - margin_x1,
+    ]
+    ov_x += margin_x0
+    ov_w -= margin_x0 + margin_x1
+    ov_y += margin_y0
+    ov_h -= margin_y0 + margin_y1
+
+    # Overlay
+    foreground = resized_overlay[:, :, :3]
+    mask = resized_overlay[:, :, 3]
+
+    overlaid_area = background[ov_y : ov_y + ov_h, ov_x : ov_x + ov_w]
+    overlaid_area[:] = np.where(mask[:, :, np.newaxis], foreground, overlaid_area)
+
+
+class FaceOverlayProcessor(VideoProcessorBase):
+    filter_type: Literal["ironman", "laughing_man", "cat"]
 
     def __init__(self) -> None:
-        self.type = "noop"
+        self._face_cascade = cv2.CascadeClassifier(
+            str(cv2_path / "data/haarcascade_frontalface_alt2.xml")
+        )
+
+        self.filter_type = "ironman"
+        self._filters = {
+            "ironman": imread_from_url(
+                "https://i.pinimg.com/originals/0c/c0/50/0cc050fd99aad66dc434ce772a0449a9.png"  # noqa: E501
+            ),
+            "laughing_man": imread_from_url(
+                "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/3a17e5a4-9610-4fa3-a4bd-cb7d94d6f7e1/darwcty-d989aaf1-3cfa-4576-b2ac-305209346162.png/v1/fill/w_944,h_847,strp/laughing_man_logo_by_aggressive_vector_darwcty-pre.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9OTE5IiwicGF0aCI6IlwvZlwvM2ExN2U1YTQtOTYxMC00ZmEzLWE0YmQtY2I3ZDk0ZDZmN2UxXC9kYXJ3Y3R5LWQ5ODlhYWYxLTNjZmEtNDU3Ni1iMmFjLTMwNTIwOTM0NjE2Mi5wbmciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.5SDBnNZF6ktZM7Mk5gJfpHNQswRba3eqpvUn6FMHyW4"  # noqa: E501
+            ),
+            "cat": imread_from_url(
+                "https://i.pinimg.com/originals/29/cd/fd/29cdfdf2248ce2465598b2cc9e357579.png"  # noqa: E501
+            ),
+        }
+
+        self.draw_rect = False  # For debug
 
     def recv(self, frame: av.VideoFrame) -> av.VideoFrame:
         img = frame.to_ndarray(format="bgr24")
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-        if self.type == "noop":
-            pass
-        elif self.type == "cartoon":
-            # prepare color
-            img_color = cv2.pyrDown(cv2.pyrDown(img))
-            for _ in range(6):
-                img_color = cv2.bilateralFilter(img_color, 9, 9, 7)
-            img_color = cv2.pyrUp(cv2.pyrUp(img_color))
+        faces = self._face_cascade.detectMultiScale(
+            gray, scaleFactor=1.11, minNeighbors=3, minSize=(30, 30)
+        )
 
-            # prepare edges
-            img_edges = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-            img_edges = cv2.adaptiveThreshold(
-                cv2.medianBlur(img_edges, 7),
-                255,
-                cv2.ADAPTIVE_THRESH_MEAN_C,
-                cv2.THRESH_BINARY,
-                9,
-                2,
-            )
-            img_edges = cv2.cvtColor(img_edges, cv2.COLOR_GRAY2RGB)
+        overlay = self._filters[self.filter_type]
 
-            # combine color and edges
-            img = cv2.bitwise_and(img_color, img_edges)
-        elif self.type == "edges":
-            # perform edge detection
-            img = cv2.cvtColor(cv2.Canny(img, 100, 200), cv2.COLOR_GRAY2BGR)
-        elif self.type == "rotate":
-            # rotate image
-            rows, cols, _ = img.shape
-            M = cv2.getRotationMatrix2D((cols / 2, rows / 2), frame.time * 45, 1)
-            img = cv2.warpAffine(img, M, (cols, rows))
+        for (x, y, w, h) in faces:
+            # Ad-hoc adjustment of the ROI for each filter type
+            if self.filter_type == "ironman":
+                roi = (x, y, w, h)
+            elif self.filter_type == "laughing_man":
+                roi = (x, y, int(w * 1.15), h)
+            elif self.filter_type == "cat":
+                roi = (x, y - int(h * 0.3), w, h)
+            overlay_bgra(img, overlay, roi)
+
+            if self.draw_rect:
+                img = cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
         return av.VideoFrame.from_ndarray(img, format="bgr24")
 
@@ -72,14 +135,14 @@ def main():
             },
             media_stream_constraints={"video": True, "audio": True},
         ),
-        video_processor_factory=OpenCVVideoProcessor,
+        video_processor_factory=FaceOverlayProcessor,
         sendback_audio=False,
     )
 
     if self_ctx.video_processor:
-        self_ctx.video_processor.type = st.radio(
-            "Select transform type",
-            ("noop", "cartoon", "edges", "rotate"),
+        self_ctx.video_processor.filter_type = st.radio(
+            "Select filter type",
+            ("ironman", "laughing_man", "cat"),
             key="filter-type",
         )
 
