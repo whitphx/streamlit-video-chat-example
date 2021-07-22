@@ -77,7 +77,7 @@ def overlay_bgra(background: np.ndarray, overlay: np.ndarray, roi):
     overlaid_area[:] = np.where(mask[:, :, np.newaxis], foreground, overlaid_area)
 
 
-class OpenCVFaceProcessor(VideoProcessorBase):
+class FaceOverlayProcessor(VideoProcessorBase):
     def __init__(self) -> None:
         self._face_cascade = cv2.CascadeClassifier(
             str(cv2_path / "data/haarcascade_frontalface_alt2.xml")
@@ -200,7 +200,7 @@ def main():
     if self_ctx.input_video_track:
         self_process_track = create_process_track(
             input_track=self_ctx.input_video_track,
-            processor_factory=OpenCVFaceProcessor,
+            processor_factory=FaceOverlayProcessor,
         )
         mix_track.add_input_track(self_process_track)
 
