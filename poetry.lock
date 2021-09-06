@@ -1078,7 +1078,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "streamlit"
-version = "0.86.0"
+version = "0.88.0"
 description = "The fastest way to build data apps in Python"
 category = "main"
 optional = false
@@ -1308,7 +1308,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "a0179b1933293ac418696109aea74af86e3be17f25298c3b6d8118a86381026c"
+content-hash = "a84ce9d9db064027c534a0f9d81375ce83261a44dc40591e824214239f3d5e44"
 
 [metadata.files]
 aioice = [
@@ -2235,8 +2235,8 @@ smmap = [
     {file = "smmap-4.0.0.tar.gz", hash = "sha256:7e65386bd122d45405ddf795637b7f7d2b532e7e401d46bbe3fb49b9986d5182"},
 ]
 streamlit = [
-    {file = "streamlit-0.86.0-py2.py3-none-any.whl", hash = "sha256:66298c36b3c7ad124b06d0f2bfe08158091d755b8e1134e3ddfc05c90e318adb"},
-    {file = "streamlit-0.86.0.tar.gz", hash = "sha256:eb70f07b39a95ee0ee12c53044907fd41ccdfaf6d886f09acd7912c66fcfdf32"},
+    {file = "streamlit-0.88.0-py2.py3-none-any.whl", hash = "sha256:1a5716b5b8e15e3fdfa57328d6749f136bbf4d5986549e9953bc6c6b39da3689"},
+    {file = "streamlit-0.88.0.tar.gz", hash = "sha256:8396b97d1d32381e5665573c5847792c15df828607b3f1ad01fbc9dcd69ecdd0"},
 ]
 streamlit-server-state = [
     {file = "streamlit-server-state-0.5.0.tar.gz", hash = "sha256:954ce6ee22b92d58ba09ea8ffa981d65c5900ee6f0759f1cf3a96b14794d4118"},
