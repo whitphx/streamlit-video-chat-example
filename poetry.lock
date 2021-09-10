@@ -1122,7 +1122,7 @@ typing_extensions = {version = ">=3.7.4,<4.0.0", markers = "python_version < \"3
 
 [[package]]
 name = "streamlit-webrtc"
-version = "0.28.0"
+version = "0.28.1"
 description = ""
 category = "main"
 optional = false
@@ -1308,7 +1308,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "c2db1c31452adf1ac7509988a7920e4b259b172ba7cc85e3869a85ddd2e0e2a2"
+content-hash = "b52694d0f9459b72d874ead9fa31884a3d83a393aad80fc219229dfa08415105"
 
 [metadata.files]
 aioice = [
@@ -2243,8 +2243,8 @@ streamlit-server-state = [
     {file = "streamlit_server_state-0.6.0-py3-none-any.whl", hash = "sha256:fa65a869099689058a9d6ccdd82a2cad5e8d4d60c2dac3151cf609e790263821"},
 ]
 streamlit-webrtc = [
-    {file = "streamlit-webrtc-0.28.0.tar.gz", hash = "sha256:8d8493da7c023818d5bd44294bc230452a5f2870b092d47d2125778f1840d4f9"},
-    {file = "streamlit_webrtc-0.28.0-py3-none-any.whl", hash = "sha256:fd3e5a43402ae5921c9b8ad665ded9a0f0e41104627c41410d6d478631c20c41"},
+    {file = "streamlit-webrtc-0.28.1.tar.gz", hash = "sha256:3ec0a7c2e105587366329c16c1d329e6bd78a099aba10e50f8f7bf3daac10b94"},
+    {file = "streamlit_webrtc-0.28.1-py3-none-any.whl", hash = "sha256:06f6e99a314bb33777d4e25ec2d53f9aa60449520e12b1dd19df560922064faf"},
 ]
 terminado = [
     {file = "terminado-0.10.1-py3-none-any.whl", hash = "sha256:c89ace5bffd0e7268bdcf22526830eb787fd146ff9d78691a0528386f92b9ae3"},
