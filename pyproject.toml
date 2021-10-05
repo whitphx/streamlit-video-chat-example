@@ -9,7 +9,7 @@ license = "MIT"
 python = "^3.6"
 streamlit = "^0.89.0"
 streamlit-webrtc = "^0.29.1"
-streamlit-server-state = "^0.8.0"
+streamlit-server-state = "^0.9.0"
 opencv-python-headless = "^4.5.2"
 
 [tool.poetry.dev-dependencies]
