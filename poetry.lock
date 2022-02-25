@@ -1057,6 +1057,14 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
 
 [[package]]
+name = "semver"
+version = "2.13.0"
+description = "Python helper for Semantic Versioning (http://semver.org/)"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[[package]]
 name = "send2trash"
 version = "1.7.1"
 description = "Send file to trash natively under Mac OS X, Windows and Linux."
@@ -1085,7 +1093,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "streamlit"
-version = "1.3.0"
+version = "1.6.0"
 description = "The fastest way to build data apps in Python"
 category = "main"
 optional = false
@@ -1098,8 +1106,9 @@ attrs = "*"
 base58 = "*"
 blinker = "*"
 cachetools = ">=4.0"
-click = ">=7.0,<8.0"
+click = ">=7.0"
 gitpython = "!=3.1.19"
+importlib-metadata = ">=1.4"
 numpy = "*"
 packaging = "*"
 pandas = ">=0.21.0"
@@ -1110,8 +1119,10 @@ pydeck = ">=0.1.dev5"
 pympler = ">=0.9"
 python-dateutil = "*"
 requests = "*"
+semver = "*"
 toml = "*"
 tornado = ">=5.0"
+typing-extensions = {version = "*", markers = "python_version < \"3.8\""}
 tzlocal = "*"
 validators = "*"
 watchdog = {version = "*", markers = "platform_system != \"Darwin\""}
@@ -1315,7 +1326,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "38a0ec51f2fac6a9f2f0deebff6934a6ff79db1811d2b0542288631ad0920820"
+content-hash = "ec35ff88e16e68e24d2a86527a5e30a7f9227ebd7023355511e6af75e4d261f4"
 
 [metadata.files]
 aioice = [
@@ -2247,6 +2258,10 @@ requests = [
     {file = "requests-2.26.0-py2.py3-none-any.whl", hash = "sha256:6c1246513ecd5ecd4528a0906f910e8f0f9c6b8ec72030dc9fd154dc1a6efd24"},
     {file = "requests-2.26.0.tar.gz", hash = "sha256:b8aa58f8cf793ffd8782d3d8cb19e66ef36f7aba4353eec859e74678b01b07a7"},
 ]
+semver = [
+    {file = "semver-2.13.0-py2.py3-none-any.whl", hash = "sha256:ced8b23dceb22134307c1b8abfa523da14198793d9787ac838e70e29e77458d4"},
+    {file = "semver-2.13.0.tar.gz", hash = "sha256:fa0fe2722ee1c3f57eac478820c3a5ae2f624af8264cbdf9000c980ff7f75e3f"},
+]
 send2trash = [
     {file = "Send2Trash-1.7.1-py3-none-any.whl", hash = "sha256:c20fee8c09378231b3907df9c215ec9766a84ee20053d99fbad854fe8bd42159"},
     {file = "Send2Trash-1.7.1.tar.gz", hash = "sha256:17730aa0a33ab82ed6ca76be3bb25f0433d0014f1ccf63c979bab13a5b9db2b2"},
@@ -2260,8 +2275,8 @@ smmap = [
     {file = "smmap-4.0.0.tar.gz", hash = "sha256:7e65386bd122d45405ddf795637b7f7d2b532e7e401d46bbe3fb49b9986d5182"},
 ]
 streamlit = [
-    {file = "streamlit-1.3.0-py2.py3-none-any.whl", hash = "sha256:9a2f8515514bf6bcd460f3522046a9a822dd44a4f16ca9b369dc79a7f08e7d1a"},
-    {file = "streamlit-1.3.0.tar.gz", hash = "sha256:599a973ee0586be0bf23d6d6b2c84fcedfcf7bd8ea1725366d1fa5499258a6cd"},
+    {file = "streamlit-1.6.0-py2.py3-none-any.whl", hash = "sha256:daf394e824b070e157d78651926dfcabbc9ecbdfa6898c0c161fad9e41f1e8db"},
+    {file = "streamlit-1.6.0.tar.gz", hash = "sha256:f7253189ef29e5e968458237440cf511a4a29b42a812c7c785998106c3ee9108"},
 ]
 streamlit-server-state = [
     {file = "streamlit-server-state-0.9.0.tar.gz", hash = "sha256:7ce3be5bbbc5fe9a5e9688b5b9c851665231ab4c39a54b4e70177cc60027cebc"},
