@@ -23,7 +23,6 @@ aioice = ">=0.7.5,<0.8.0"
 av = ">=8.0.0,<9.0.0"
 cffi = ">=1.0.0"
 cryptography = ">=2.2"
-dataclasses = {version = "*", markers = "python_version < \"3.7\""}
 google-crc32c = ">=1.1"
 pyee = ">=6.0.0"
 pylibsrtp = ">=0.5.6"
@@ -151,7 +150,6 @@ python-versions = ">=3.6"
 [package.dependencies]
 appdirs = "*"
 click = ">=7.1.2"
-dataclasses = {version = ">=0.6", markers = "python_version < \"3.7\""}
 mypy-extensions = ">=0.4.3"
 pathspec = ">=0.6,<1"
 regex = ">=2020.1.8"
@@ -256,14 +254,6 @@ pep8test = ["black", "flake8", "flake8-import-order", "pep8-naming"]
 sdist = ["setuptools-rust (>=0.11.4)"]
 ssh = ["bcrypt (>=3.1.5)"]
 test = ["pytest (>=6.0)", "pytest-cov", "pytest-subtests", "pytest-xdist", "pretend", "iso8601", "pytz", "hypothesis (>=1.11.4,!=3.79.2)"]
-
-[[package]]
-name = "dataclasses"
-version = "0.8"
-description = "A backport of the dataclasses module for Python 3.6"
-category = "main"
-optional = false
-python-versions = ">=3.6, <3.7"
 
 [[package]]
 name = "decorator"
@@ -1129,16 +1119,16 @@ streamlit = ">=0.65.0"
 
 [[package]]
 name = "streamlit-webrtc"
-version = "0.31.2"
+version = "0.35.2"
 description = ""
 category = "main"
 optional = false
-python-versions = ">=3.6,<4.0"
+python-versions = ">=3.7,<4.0"
 
 [package.dependencies]
 aiortc = ">=1.1.2,<2.0.0"
 streamlit = ">=0.84.1"
-typing_extensions = {version = ">=3.7.4,<4.0.0", markers = "python_version < \"3.8\""}
+typing_extensions = {version = ">=3.7.4,<5.0.0", markers = "python_version < \"3.8\""}
 
 [[package]]
 name = "terminado"
@@ -1314,8 +1304,8 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.6"
-content-hash = "88df6faa4f52bc688a89b033d9c43890d3052f1181001f877fc138a6e2c24ee7"
+python-versions = "^3.7"
+content-hash = "4dc6579e683971415f2b49d2c0f86f3cc71b04a35e3b31b5a3493b073d7eeb58"
 
 [metadata.files]
 aioice = [
@@ -1542,10 +1532,6 @@ cryptography = [
     {file = "cryptography-3.4.7-pp37-pypy37_pp73-manylinux2014_x86_64.whl", hash = "sha256:ee77aa129f481be46f8d92a1a7db57269a2f23052d5f2433b4621bb457081cc9"},
     {file = "cryptography-3.4.7-pp37-pypy37_pp73-win_amd64.whl", hash = "sha256:bf40af59ca2465b24e54f671b2de2c59257ddc4f7e5706dbd6930e26823668d3"},
     {file = "cryptography-3.4.7.tar.gz", hash = "sha256:3d10de8116d25649631977cb37da6cbdd2d6fa0e0281d014a5b7d337255ca713"},
-]
-dataclasses = [
-    {file = "dataclasses-0.8-py3-none-any.whl", hash = "sha256:0201d89fa866f68c8ebd9d08ee6ff50c0b255f8ec63a71c16fda7af82bb887bf"},
-    {file = "dataclasses-0.8.tar.gz", hash = "sha256:8479067f342acf957dc82ec415d355ab5edb7e7646b90dc6e2fd1d96ad084c97"},
 ]
 decorator = [
     {file = "decorator-5.0.9-py3-none-any.whl", hash = "sha256:6e5c199c16f7a9f0e3a61a4a54b3d27e7dad0dbdde92b944426cb20914376323"},
@@ -2268,8 +2254,8 @@ streamlit-server-state = [
     {file = "streamlit_server_state-0.10.0-py3-none-any.whl", hash = "sha256:216da550160a4c7c77ae894ac8b3e4dfe9bb54325d378a92fff2b8edff702369"},
 ]
 streamlit-webrtc = [
-    {file = "streamlit-webrtc-0.31.2.tar.gz", hash = "sha256:daacdd7f0cca817e3a15217df067c93a4519cd8180d1642bda87136da49ababe"},
-    {file = "streamlit_webrtc-0.31.2-py3-none-any.whl", hash = "sha256:421d8be8c51e2dcf051ebeace7f2e73bacb425b42981d81dd1ce241272ccd82c"},
+    {file = "streamlit-webrtc-0.35.2.tar.gz", hash = "sha256:82798b1fc41fd6b7b97054fd7cff6847c4cadba9ceb77eb2fb48c9c4a246b0b7"},
+    {file = "streamlit_webrtc-0.35.2-py3-none-any.whl", hash = "sha256:a6c4c73ab25e23861b1e202b244737de39842ba7f60f313777e3d0690f0378b9"},
 ]
 terminado = [
     {file = "terminado-0.10.1-py3-none-any.whl", hash = "sha256:c89ace5bffd0e7268bdcf22526830eb787fd146ff9d78691a0528386f92b9ae3"},
