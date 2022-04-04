@@ -10,7 +10,7 @@ python = "^3.7"
 streamlit = "1.5.1"
 streamlit-webrtc = "^0.36.1"
 streamlit-server-state = "^0.12.0"
-opencv-python-headless = "^4.5.2"
+opencv-python-headless = "^4.5.5"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
