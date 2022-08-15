@@ -28,7 +28,7 @@ pyee = ">=9.0.0"
 pylibsrtp = ">=0.5.6"
 
 [package.extras]
-dev = ["aiohttp (>=3.7.0)", "coverage (>=5.0)", "numpy (>=1.19.0)"]
+dev = ["numpy (>=1.19.0)", "coverage (>=5.0)", "aiohttp (>=3.7.0)"]
 
 [[package]]
 name = "altair"
@@ -47,7 +47,7 @@ pandas = ">=0.18"
 toolz = "*"
 
 [package.extras]
-dev = ["black", "docutils", "ipython", "flake8", "pytest", "sphinx", "mistune (<2.0.0)", "m2r", "vega-datasets", "recommonmark"]
+dev = ["recommonmark", "vega-datasets", "m2r", "mistune (<2.0.0)", "sphinx", "pytest", "flake8", "ipython", "docutils", "black"]
 
 [[package]]
 name = "appdirs"
@@ -78,9 +78,9 @@ argon2-cffi-bindings = "*"
 typing-extensions = {version = "*", markers = "python_version < \"3.8\""}
 
 [package.extras]
-dev = ["pre-commit", "cogapp", "tomli", "coverage[toml] (>=5.0.2)", "hypothesis", "pytest", "sphinx", "sphinx-notfound-page", "furo"]
-docs = ["sphinx", "sphinx-notfound-page", "furo"]
-tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pytest"]
+tests = ["pytest", "hypothesis", "coverage[toml] (>=5.0.2)"]
+docs = ["furo", "sphinx-notfound-page", "sphinx"]
+dev = ["furo", "sphinx-notfound-page", "sphinx", "pytest", "hypothesis", "coverage[toml] (>=5.0.2)", "tomli", "cogapp", "pre-commit"]
 
 [[package]]
 name = "argon2-cffi-bindings"
@@ -114,10 +114,10 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [package.extras]
-dev = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "zope.interface", "furo", "sphinx", "sphinx-notfound-page", "pre-commit", "cloudpickle"]
-docs = ["furo", "sphinx", "zope.interface", "sphinx-notfound-page"]
-tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "zope.interface", "cloudpickle"]
-tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "cloudpickle"]
+tests_no_zope = ["cloudpickle", "pytest-mypy-plugins", "mypy", "six", "pytest (>=4.3.0)", "pympler", "hypothesis", "coverage[toml] (>=5.0.2)"]
+tests = ["cloudpickle", "zope.interface", "pytest-mypy-plugins", "mypy", "six", "pytest (>=4.3.0)", "pympler", "hypothesis", "coverage[toml] (>=5.0.2)"]
+docs = ["sphinx-notfound-page", "zope.interface", "sphinx", "furo"]
+dev = ["cloudpickle", "pre-commit", "sphinx-notfound-page", "sphinx", "furo", "zope.interface", "pytest-mypy-plugins", "mypy", "six", "pytest (>=4.3.0)", "pympler", "hypothesis", "coverage[toml] (>=5.0.2)"]
 
 [[package]]
 name = "av"
@@ -155,7 +155,7 @@ optional = false
 python-versions = ">=3.5"
 
 [package.extras]
-tests = ["mypy", "PyHamcrest (>=2.0.2)", "pytest (>=4.6)", "pytest-benchmark", "pytest-cov", "pytest-flake8"]
+tests = ["pytest-flake8", "pytest-cov", "pytest-benchmark", "pytest (>=4.6)", "PyHamcrest (>=2.0.2)", "mypy"]
 
 [[package]]
 name = "black"
@@ -176,8 +176,8 @@ typed-ast = ">=1.4.0"
 typing-extensions = ">=3.7.4"
 
 [package.extras]
+d = ["aiohttp-cors", "aiohttp (>=3.3.2)"]
 colorama = ["colorama (>=0.4.3)"]
-d = ["aiohttp (>=3.3.2)", "aiohttp-cors"]
 
 [[package]]
 name = "bleach"
@@ -310,12 +310,12 @@ optional = false
 python-versions = ">=3.6,<4.0"
 
 [package.extras]
-dnssec = ["cryptography (>=2.6,<37.0)"]
-curio = ["curio (>=1.2,<2.0)", "sniffio (>=1.1,<2.0)"]
-doh = ["h2 (>=4.1.0)", "httpx (>=0.21.1)", "requests (>=2.23.0,<3.0.0)", "requests-toolbelt (>=0.9.1,<0.10.0)"]
-idna = ["idna (>=2.1,<4.0)"]
-trio = ["trio (>=0.14,<0.20)"]
 wmi = ["wmi (>=1.5.1,<2.0.0)"]
+trio = ["trio (>=0.14,<0.20)"]
+curio = ["sniffio (>=1.1,<2.0)", "curio (>=1.2,<2.0)"]
+doh = ["requests-toolbelt (>=0.9.1,<0.10.0)", "requests (>=2.23.0,<3.0.0)", "httpx (>=0.21.1)", "h2 (>=4.1.0)"]
+idna = ["idna (>=2.1,<4.0)"]
+dnssec = ["cryptography (>=2.6,<37.0)"]
 
 [[package]]
 name = "entrypoints"
@@ -394,8 +394,8 @@ typing-extensions = {version = ">=3.6.4", markers = "python_version < \"3.8\""}
 zipp = ">=0.5"
 
 [package.extras]
-docs = ["sphinx", "jaraco.packaging (>=8.2)", "rst.linker (>=1.9)"]
-testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "packaging", "pep517", "pyfakefs", "flufl.flake8", "pytest-black (>=0.3.7)", "pytest-mypy", "importlib-resources (>=1.3)"]
+testing = ["importlib-resources (>=1.3)", "pytest-mypy", "pytest-black (>=0.3.7)", "flufl.flake8", "pyfakefs", "pep517", "packaging", "pytest-enabler (>=1.0.1)", "pytest-cov", "pytest-flake8", "pytest-checkdocs (>=2.4)", "pytest (>=4.6)"]
+docs = ["rst.linker (>=1.9)", "jaraco.packaging (>=8.2)", "sphinx"]
 
 [[package]]
 name = "importlib-resources"
@@ -409,8 +409,8 @@ python-versions = ">=3.6"
 zipp = {version = ">=3.1.0", markers = "python_version < \"3.10\""}
 
 [package.extras]
-docs = ["sphinx", "jaraco.packaging (>=8.2)", "rst.linker (>=1.9)"]
-testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "pytest-black (>=0.3.7)", "pytest-mypy"]
+testing = ["pytest-mypy", "pytest-black (>=0.3.7)", "pytest-enabler (>=1.0.1)", "pytest-cov", "pytest-flake8", "pytest-checkdocs (>=2.4)", "pytest (>=6)"]
+docs = ["rst.linker (>=1.9)", "jaraco.packaging (>=8.2)", "sphinx"]
 
 [[package]]
 name = "ipykernel"
@@ -431,7 +431,7 @@ tornado = ">=4.2,<7.0"
 traitlets = ">=5.1.0,<6.0"
 
 [package.extras]
-test = ["pytest (!=5.3.4)", "pytest-cov", "flaky", "ipyparallel"]
+test = ["ipyparallel", "flaky", "pytest-cov", "pytest (!=5.3.4)"]
 
 [[package]]
 name = "ipython"
@@ -455,15 +455,15 @@ pygments = "*"
 traitlets = ">=4.2"
 
 [package.extras]
-all = ["Sphinx (>=1.3)", "ipykernel", "ipyparallel", "ipywidgets", "nbconvert", "nbformat", "nose (>=0.10.1)", "notebook", "numpy (>=1.17)", "pygments", "qtconsole", "requests", "testpath"]
-doc = ["Sphinx (>=1.3)"]
-kernel = ["ipykernel"]
-nbconvert = ["nbconvert"]
-nbformat = ["nbformat"]
-notebook = ["notebook", "ipywidgets"]
-parallel = ["ipyparallel"]
+test = ["numpy (>=1.17)", "ipykernel", "nbformat", "pygments", "testpath", "requests", "nose (>=0.10.1)"]
 qtconsole = ["qtconsole"]
-test = ["nose (>=0.10.1)", "requests", "testpath", "pygments", "nbformat", "ipykernel", "numpy (>=1.17)"]
+parallel = ["ipyparallel"]
+notebook = ["ipywidgets", "notebook"]
+nbformat = ["nbformat"]
+nbconvert = ["nbconvert"]
+kernel = ["ipykernel"]
+doc = ["Sphinx (>=1.3)"]
+all = ["testpath", "requests", "qtconsole", "pygments", "numpy (>=1.17)", "notebook", "nose (>=0.10.1)", "nbformat", "nbconvert", "ipywidgets", "ipyparallel", "ipykernel", "Sphinx (>=1.3)"]
 
 [[package]]
 name = "ipython-genutils"
@@ -491,7 +491,7 @@ traitlets = ">=4.3.1"
 widgetsnbextension = ">=3.5.0,<3.6.0"
 
 [package.extras]
-test = ["pytest (>=3.6.0)", "pytest-cov", "mock"]
+test = ["mock", "pytest-cov", "pytest (>=3.6.0)"]
 
 [[package]]
 name = "isort"
@@ -502,10 +502,10 @@ optional = false
 python-versions = ">=3.6.1,<4.0"
 
 [package.extras]
-pipfile_deprecated_finder = ["pipreqs", "requirementslib"]
-requirements_deprecated_finder = ["pipreqs", "pip-api"]
-colors = ["colorama (>=0.4.3,<0.5.0)"]
 plugins = ["setuptools"]
+colors = ["colorama (>=0.4.3,<0.5.0)"]
+requirements_deprecated_finder = ["pip-api", "pipreqs"]
+pipfile_deprecated_finder = ["requirementslib", "pipreqs"]
 
 [[package]]
 name = "jedi"
@@ -519,8 +519,8 @@ python-versions = ">=3.6"
 parso = ">=0.8.0,<0.9.0"
 
 [package.extras]
-qa = ["flake8 (==3.8.3)", "mypy (==0.782)"]
-testing = ["Django (<3.1)", "colorama", "docopt", "pytest (<7.0.0)"]
+testing = ["pytest (<7.0.0)", "docopt", "colorama", "Django (<3.1)"]
+qa = ["mypy (==0.782)", "flake8 (==3.8.3)"]
 
 [[package]]
 name = "jinja2"
@@ -552,8 +552,8 @@ pyrsistent = ">=0.14.0,<0.17.0 || >0.17.0,<0.17.1 || >0.17.1,<0.17.2 || >0.17.2"
 typing-extensions = {version = "*", markers = "python_version < \"3.8\""}
 
 [package.extras]
-format = ["fqdn", "idna", "isoduration", "jsonpointer (>1.13)", "rfc3339-validator", "rfc3987", "uri-template", "webcolors (>=1.11)"]
-format_nongpl = ["fqdn", "idna", "isoduration", "jsonpointer (>1.13)", "rfc3339-validator", "rfc3986-validator (>0.1.0)", "uri-template", "webcolors (>=1.11)"]
+format_nongpl = ["webcolors (>=1.11)", "uri-template", "rfc3986-validator (>0.1.0)", "rfc3339-validator", "jsonpointer (>1.13)", "isoduration", "idna", "fqdn"]
+format = ["webcolors (>=1.11)", "uri-template", "rfc3987", "rfc3339-validator", "jsonpointer (>1.13)", "isoduration", "idna", "fqdn"]
 
 [[package]]
 name = "jupyter-client"
@@ -573,8 +573,8 @@ tornado = ">=4.1"
 traitlets = "*"
 
 [package.extras]
-doc = ["myst-parser", "sphinx (>=1.3.6)", "sphinx-rtd-theme", "sphinxcontrib-github-alt"]
-test = ["codecov", "coverage", "ipykernel", "ipython", "mock", "mypy", "pre-commit", "pytest", "pytest-asyncio", "pytest-cov", "pytest-timeout", "jedi (<0.18)"]
+test = ["jedi (<0.18)", "pytest-timeout", "pytest-cov", "pytest-asyncio", "pytest", "pre-commit", "mypy", "mock", "ipython", "ipykernel", "coverage", "codecov"]
+doc = ["sphinxcontrib-github-alt", "sphinx-rtd-theme", "sphinx (>=1.3.6)", "myst-parser"]
 
 [[package]]
 name = "jupyter-core"
@@ -657,8 +657,8 @@ typed-ast = {version = ">=1.4.0,<1.5.0", markers = "python_version < \"3.8\""}
 typing-extensions = ">=3.7.4"
 
 [package.extras]
-dmypy = ["psutil (>=4.0)"]
 python2 = ["typed-ast (>=1.4.0,<1.5.0)"]
+dmypy = ["psutil (>=4.0)"]
 
 [[package]]
 name = "mypy-extensions"
@@ -683,8 +683,8 @@ nest-asyncio = "*"
 traitlets = ">=4.2"
 
 [package.extras]
-sphinx = ["Sphinx (>=1.7)", "sphinx-book-theme", "mock", "moto", "myst-parser"]
-test = ["ipython (<8.0.0)", "ipykernel", "ipywidgets (<8.0.0)", "pytest (>=4.1)", "pytest-asyncio", "pytest-cov (>=2.6.1)", "check-manifest", "flake8", "mypy", "xmltodict", "black", "pip (>=18.1)", "wheel (>=0.31.0)", "setuptools (>=38.6.0)", "twine (>=1.11.0)"]
+test = ["twine (>=1.11.0)", "setuptools (>=38.6.0)", "wheel (>=0.31.0)", "pip (>=18.1)", "black", "xmltodict", "mypy", "flake8", "check-manifest", "pytest-cov (>=2.6.1)", "pytest-asyncio", "pytest (>=4.1)", "ipywidgets (<8.0.0)", "ipykernel", "ipython (<8.0.0)"]
+sphinx = ["myst-parser", "moto", "mock", "sphinx-book-theme", "Sphinx (>=1.7)"]
 
 [[package]]
 name = "nbconvert"
@@ -710,11 +710,11 @@ testpath = "*"
 traitlets = ">=5.0"
 
 [package.extras]
-all = ["pytest", "pytest-cov", "pytest-dependency", "ipykernel", "ipywidgets (>=7)", "pyppeteer (>=1,<1.1)", "tornado (>=4.0)", "sphinx (>=1.5.1)", "sphinx-rtd-theme", "nbsphinx (>=0.2.12)", "ipython"]
-docs = ["sphinx (>=1.5.1)", "sphinx-rtd-theme", "nbsphinx (>=0.2.12)", "ipython"]
-serve = ["tornado (>=4.0)"]
-test = ["pytest", "pytest-cov", "pytest-dependency", "ipykernel", "ipywidgets (>=7)", "pyppeteer (>=1,<1.1)"]
 webpdf = ["pyppeteer (>=1,<1.1)"]
+test = ["pyppeteer (>=1,<1.1)", "ipywidgets (>=7)", "ipykernel", "pytest-dependency", "pytest-cov", "pytest"]
+serve = ["tornado (>=4.0)"]
+docs = ["ipython", "nbsphinx (>=0.2.12)", "sphinx-rtd-theme", "sphinx (>=1.5.1)"]
+all = ["ipython", "nbsphinx (>=0.2.12)", "sphinx-rtd-theme", "sphinx (>=1.5.1)", "tornado (>=4.0)", "pyppeteer (>=1,<1.1)", "ipywidgets (>=7)", "ipykernel", "pytest-dependency", "pytest-cov", "pytest"]
 
 [[package]]
 name = "nbformat"
@@ -731,8 +731,8 @@ jupyter-core = "*"
 traitlets = ">=4.1"
 
 [package.extras]
+test = ["pytest-cov", "pytest", "testpath", "fastjsonschema", "check-manifest"]
 fast = ["fastjsonschema"]
-test = ["check-manifest", "fastjsonschema", "testpath", "pytest", "pytest-cov"]
 
 [[package]]
 name = "nest-asyncio"
@@ -776,9 +776,9 @@ tornado = ">=6.1"
 traitlets = ">=4.2.1"
 
 [package.extras]
-docs = ["sphinx", "nbsphinx", "sphinxcontrib-github-alt", "sphinx-rtd-theme", "myst-parser"]
+test = ["requests-unixsocket", "pytest-cov", "selenium", "nbval", "requests", "coverage", "pytest"]
 json-logging = ["json-logging"]
-test = ["pytest", "coverage", "requests", "nbval", "selenium", "pytest-cov", "requests-unixsocket"]
+docs = ["myst-parser", "sphinx-rtd-theme", "sphinxcontrib-github-alt", "nbsphinx", "sphinx"]
 
 [[package]]
 name = "numpy"
@@ -798,10 +798,10 @@ python-versions = ">=3.6"
 
 [package.dependencies]
 numpy = [
-    {version = ">=1.21.2", markers = "python_version >= \"3.10\" or python_version >= \"3.6\" and platform_system == \"Darwin\" and platform_machine == \"arm64\""},
-    {version = ">=1.19.3", markers = "python_version >= \"3.6\" and platform_system == \"Linux\" and platform_machine == \"aarch64\" or python_version >= \"3.9\""},
-    {version = ">=1.14.5", markers = "python_version >= \"3.7\""},
+    {version = ">=1.19.3", markers = "python_version >= \"3.9\" or python_version >= \"3.6\" and platform_system == \"Linux\" and platform_machine == \"aarch64\""},
     {version = ">=1.17.3", markers = "python_version >= \"3.8\""},
+    {version = ">=1.14.5", markers = "python_version >= \"3.7\""},
+    {version = ">=1.21.2", markers = "python_version >= \"3.6\" and platform_system == \"Darwin\" and platform_machine == \"arm64\" or python_version >= \"3.10\""},
 ]
 
 [[package]]
@@ -829,7 +829,7 @@ python-dateutil = ">=2.7.3"
 pytz = ">=2017.2"
 
 [package.extras]
-test = ["pytest (>=4.0.2)", "pytest-xdist", "hypothesis (>=3.58)"]
+test = ["hypothesis (>=3.58)", "pytest-xdist", "pytest (>=4.0.2)"]
 
 [[package]]
 name = "pandocfilters"
@@ -848,8 +848,8 @@ optional = false
 python-versions = ">=3.6"
 
 [package.extras]
-qa = ["flake8 (==3.8.3)", "mypy (==0.782)"]
-testing = ["docopt", "pytest (<6.0.0)"]
+testing = ["pytest (<6.0.0)", "docopt"]
+qa = ["mypy (==0.782)", "flake8 (==3.8.3)"]
 
 [[package]]
 name = "pathspec"
@@ -1032,7 +1032,7 @@ optional = false
 python-versions = ">=3.6"
 
 [package.extras]
-diagrams = ["jinja2", "railroad-diagrams"]
+diagrams = ["railroad-diagrams", "jinja2"]
 
 [[package]]
 name = "pyrsistent"
@@ -1124,8 +1124,8 @@ idna = {version = ">=2.5,<4", markers = "python_version >= \"3\""}
 urllib3 = ">=1.21.1,<1.27"
 
 [package.extras]
-socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
+socks = ["win-inet-pton", "PySocks (>=1.5.6,!=1.5.7)"]
 
 [[package]]
 name = "send2trash"
@@ -1136,9 +1136,9 @@ optional = false
 python-versions = "*"
 
 [package.extras]
-nativelib = ["pyobjc-framework-cocoa", "pywin32"]
-objc = ["pyobjc-framework-cocoa"]
 win32 = ["pywin32"]
+objc = ["pyobjc-framework-cocoa"]
+nativelib = ["pywin32", "pyobjc-framework-cocoa"]
 
 [[package]]
 name = "six"
@@ -1192,13 +1192,14 @@ watchdog = {version = "*", markers = "platform_system != \"Darwin\""}
 
 [[package]]
 name = "streamlit-server-state"
-version = "0.12.0"
+version = "0.14.0"
 description = ""
 category = "main"
 optional = false
 python-versions = ">=3.7,<4.0"
 
 [package.dependencies]
+packaging = ">=20.0"
 streamlit = ">=0.65.0"
 
 [[package]]
@@ -1314,8 +1315,8 @@ pytz-deprecation-shim = "*"
 tzdata = {version = "*", markers = "platform_system == \"Windows\""}
 
 [package.extras]
-devenv = ["black", "pyroma", "pytest-cov", "zest.releaser"]
-test = ["pytest-mock (>=3.3)", "pytest (>=4.3)"]
+test = ["pytest (>=4.3)", "pytest-mock (>=3.3)"]
+devenv = ["zest.releaser", "pytest-cov", "pyroma", "black"]
 
 [[package]]
 name = "urllib3"
@@ -1326,9 +1327,9 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4"
 
 [package.extras]
-brotli = ["brotlipy (>=0.6.0)"]
-secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "ipaddress"]
 socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
+secure = ["ipaddress", "certifi", "idna (>=2.0.0)", "cryptography (>=1.3.4)", "pyOpenSSL (>=0.14)"]
+brotli = ["brotlipy (>=0.6.0)"]
 
 [[package]]
 name = "validators"
@@ -1343,7 +1344,7 @@ decorator = ">=3.4.0"
 six = ">=1.4.0"
 
 [package.extras]
-test = ["pytest (>=2.2.3)", "flake8 (>=2.4.0)", "isort (>=4.2.2)"]
+test = ["isort (>=4.2.2)", "flake8 (>=2.4.0)", "pytest (>=2.2.3)"]
 
 [[package]]
 name = "watchdog"
@@ -1392,13 +1393,13 @@ optional = false
 python-versions = ">=3.7"
 
 [package.extras]
-docs = ["sphinx", "jaraco.packaging (>=8.2)", "rst.linker (>=1.9)"]
-testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
+testing = ["pytest-mypy", "pytest-black (>=0.3.7)", "func-timeout", "jaraco.itertools", "pytest-enabler (>=1.0.1)", "pytest-cov", "pytest-flake8", "pytest-checkdocs (>=2.4)", "pytest (>=6)"]
+docs = ["rst.linker (>=1.9)", "jaraco.packaging (>=8.2)", "sphinx"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "10dc379ef46f1266a41aa047deaedf8a22342681c9b38a272c37e4c7fb6640ce"
+content-hash = "b0337b8573bc4b4bb059acb2e1e45895fb46ab343f11f24727194f1429b2c98a"
 
 [metadata.files]
 aioice = [
@@ -2400,8 +2401,8 @@ streamlit = [
     {file = "streamlit-1.5.1.tar.gz", hash = "sha256:94f6dc49a607a2fa909ee286d2120769b69af1899573bc56568301eee0b3b76a"},
 ]
 streamlit-server-state = [
-    {file = "streamlit-server-state-0.12.0.tar.gz", hash = "sha256:e536cc9bbbb788a61a0a8fb2b0a2c9ab831bc4334f02c07ebc21f9c4d305d60c"},
-    {file = "streamlit_server_state-0.12.0-py3-none-any.whl", hash = "sha256:7a256e1492338594ef992087d100b8fefdf56ffb8316387f9687b9d840233211"},
+    {file = "streamlit-server-state-0.14.0.tar.gz", hash = "sha256:b2604f3b5dbf4fe2d7c6c7fda41e98badfcafa9c5274ba7bf3e3cfac98770ecf"},
+    {file = "streamlit_server_state-0.14.0-py3-none-any.whl", hash = "sha256:2f38f1dcff802f5dacff2452256b2e495fb17f4d8a70f3c99652cafa37e3c421"},
 ]
 streamlit-webrtc = [
     {file = "streamlit-webrtc-0.36.1.tar.gz", hash = "sha256:5da887fe9af4de1c2981d21d801c615b5c8e292404c724eb28ab634627fb381d"},
