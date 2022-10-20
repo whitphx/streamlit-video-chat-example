@@ -63,14 +63,14 @@ def overlay_bgra(background: np.ndarray, overlay: np.ndarray, roi):
     overlaid_area[:] = np.where(mask[:, :, np.newaxis], foreground, overlaid_area)
 
 
-@st.cache
+@st.experimental_singleton
 def get_face_classifier():
     return cv2.CascadeClassifier(
         str(cv2_path / "data/haarcascade_frontalface_alt2.xml")
     )
 
 
-@st.experimental_memo
+@st.experimental_singleton
 def get_filters():
     return {
         "ironman": imread_from_url(
