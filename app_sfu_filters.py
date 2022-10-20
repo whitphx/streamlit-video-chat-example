@@ -1,22 +1,12 @@
 import urllib.request
 from pathlib import Path
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal  # type: ignore
-
 import av
 import cv2
 import numpy as np
 import streamlit as st
 from streamlit_server_state import server_state, server_state_lock
-from streamlit_webrtc import (
-    ClientSettings,
-    VideoProcessorBase,
-    WebRtcMode,
-    webrtc_streamer,
-)
+from streamlit_webrtc import ClientSettings, WebRtcMode, webrtc_streamer
 
 cv2_path = Path(cv2.__file__).parent
 
@@ -73,58 +63,66 @@ def overlay_bgra(background: np.ndarray, overlay: np.ndarray, roi):
     overlaid_area[:] = np.where(mask[:, :, np.newaxis], foreground, overlaid_area)
 
 
-class FaceOverlayProcessor(VideoProcessorBase):
-    filter_type: Literal["ironman", "laughing_man", "cat"]
+@st.cache
+def get_face_classifier():
+    return cv2.CascadeClassifier(
+        str(cv2_path / "data/haarcascade_frontalface_alt2.xml")
+    )
 
-    def __init__(self) -> None:
-        self._face_cascade = cv2.CascadeClassifier(
-            str(cv2_path / "data/haarcascade_frontalface_alt2.xml")
-        )
 
-        self.filter_type = "ironman"
-        self._filters = {
-            "ironman": imread_from_url(
-                "https://i.pinimg.com/originals/0c/c0/50/0cc050fd99aad66dc434ce772a0449a9.png"  # noqa: E501
-            ),
-            "laughing_man": imread_from_url(
-                "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/3a17e5a4-9610-4fa3-a4bd-cb7d94d6f7e1/darwcty-d989aaf1-3cfa-4576-b2ac-305209346162.png/v1/fill/w_944,h_847,strp/laughing_man_logo_by_aggressive_vector_darwcty-pre.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9OTE5IiwicGF0aCI6IlwvZlwvM2ExN2U1YTQtOTYxMC00ZmEzLWE0YmQtY2I3ZDk0ZDZmN2UxXC9kYXJ3Y3R5LWQ5ODlhYWYxLTNjZmEtNDU3Ni1iMmFjLTMwNTIwOTM0NjE2Mi5wbmciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.5SDBnNZF6ktZM7Mk5gJfpHNQswRba3eqpvUn6FMHyW4"  # noqa: E501
-            ),
-            "cat": imread_from_url(
-                "https://i.pinimg.com/originals/29/cd/fd/29cdfdf2248ce2465598b2cc9e357579.png"  # noqa: E501
-            ),
-        }
-
-        self.draw_rect = False  # For debug
-
-    def recv(self, frame: av.VideoFrame) -> av.VideoFrame:
-        img = frame.to_ndarray(format="bgr24")
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-        faces = self._face_cascade.detectMultiScale(
-            gray, scaleFactor=1.11, minNeighbors=3, minSize=(30, 30)
-        )
-
-        overlay = self._filters[self.filter_type]
-
-        for (x, y, w, h) in faces:
-            # Ad-hoc adjustment of the ROI for each filter type
-            if self.filter_type == "ironman":
-                roi = (x, y, w, h)
-            elif self.filter_type == "laughing_man":
-                roi = (x, y, int(w * 1.15), h)
-            elif self.filter_type == "cat":
-                roi = (x, y - int(h * 0.3), w, h)
-            overlay_bgra(img, overlay, roi)
-
-            if self.draw_rect:
-                img = cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
-
-        return av.VideoFrame.from_ndarray(img, format="bgr24")
+@st.experimental_memo
+def get_filters():
+    return {
+        "ironman": imread_from_url(
+            "https://i.pinimg.com/originals/0c/c0/50/0cc050fd99aad66dc434ce772a0449a9.png"  # noqa: E501
+        ),
+        "laughing_man": imread_from_url(
+            "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/3a17e5a4-9610-4fa3-a4bd-cb7d94d6f7e1/darwcty-d989aaf1-3cfa-4576-b2ac-305209346162.png/v1/fill/w_944,h_847,strp/laughing_man_logo_by_aggressive_vector_darwcty-pre.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9OTE5IiwicGF0aCI6IlwvZlwvM2ExN2U1YTQtOTYxMC00ZmEzLWE0YmQtY2I3ZDk0ZDZmN2UxXC9kYXJ3Y3R5LWQ5ODlhYWYxLTNjZmEtNDU3Ni1iMmFjLTMwNTIwOTM0NjE2Mi5wbmciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.5SDBnNZF6ktZM7Mk5gJfpHNQswRba3eqpvUn6FMHyW4"  # noqa: E501
+        ),
+        "cat": imread_from_url(
+            "https://i.pinimg.com/originals/29/cd/fd/29cdfdf2248ce2465598b2cc9e357579.png"  # noqa: E501
+        ),
+    }
 
 
 def main():
     if "webrtc_contexts" not in server_state:
         server_state["webrtc_contexts"] = []
+
+    face_cascade = get_face_classifier()
+    filters = get_filters()
+
+    filter_type = st.radio(
+        "Select filter type",
+        ("ironman", "laughing_man", "cat"),
+        key="filter-type",
+    )
+    draw_rect = st.checkbox("Draw rect (for debug)")
+
+    def video_frame_callback(frame: av.VideoFrame) -> av.VideoFrame:
+        img = frame.to_ndarray(format="bgr24")
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+        faces = face_cascade.detectMultiScale(
+            gray, scaleFactor=1.11, minNeighbors=3, minSize=(30, 30)
+        )
+
+        overlay = filters[filter_type]
+
+        for (x, y, w, h) in faces:
+            # Ad-hoc adjustment of the ROI for each filter type
+            if filter_type == "ironman":
+                roi = (x, y, w, h)
+            elif filter_type == "laughing_man":
+                roi = (x, y, int(w * 1.15), h)
+            elif filter_type == "cat":
+                roi = (x, y - int(h * 0.3), w, h)
+            overlay_bgra(img, overlay, roi)
+
+            if draw_rect:
+                img = cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+
+        return av.VideoFrame.from_ndarray(img, format="bgr24")
 
     self_ctx = webrtc_streamer(
         key="self",
@@ -135,16 +133,9 @@ def main():
             },
             media_stream_constraints={"video": True, "audio": True},
         ),
-        video_processor_factory=FaceOverlayProcessor,
+        video_frame_callback=video_frame_callback,
         sendback_audio=False,
     )
-
-    if self_ctx.video_processor:
-        self_ctx.video_processor.filter_type = st.radio(
-            "Select filter type",
-            ("ironman", "laughing_man", "cat"),
-            key="filter-type",
-        )
 
     with server_state_lock["webrtc_contexts"]:
         webrtc_contexts = server_state["webrtc_contexts"]
