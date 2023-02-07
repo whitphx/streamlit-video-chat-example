@@ -1599,18 +1599,19 @@ streamlit = ">=0.65.0"
 
 [[package]]
 name = "streamlit-webrtc"
-version = "0.43.4"
+version = "0.44.2"
 description = ""
 category = "main"
 optional = false
-python-versions = ">=3.7, !=2.7.*, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, !=3.6.*"
+python-versions = ">=3.7, !=2.7.*, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, !=3.6.*, !=3.11.*"
 files = [
-    {file = "streamlit-webrtc-0.43.4.tar.gz", hash = "sha256:01469e8b8feef31b5be69a97f45ad68048130767d01ca552660d886de2045bcf"},
-    {file = "streamlit_webrtc-0.43.4-py3-none-any.whl", hash = "sha256:169783b6a346b7447779956c7ba3cb4360c7e989ef5323ac91d27019c76bd747"},
+    {file = "streamlit_webrtc-0.44.2-py3-none-any.whl", hash = "sha256:09603ec015727d14f75a88c704dd44e9f99f48547c1d443aba5e808ef83f4b4a"},
+    {file = "streamlit_webrtc-0.44.2.tar.gz", hash = "sha256:0cd58cfffa1de605e73c96c4302256329a47e1c1cac035278bb8b83beb91786a"},
 ]
 
 [package.dependencies]
 aiortc = ">=1.1.2,<2.0.0"
+cryptography = "<39"
 packaging = ">=20.0"
 streamlit = ">=0.84.1"
 typing_extensions = {version = ">=3.7.4,<5.0.0", markers = "python_version < \"3.8\""}
@@ -1848,4 +1849,4 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.7,<3.11,!=3.9.7"
-content-hash = "43c71a76fd62e93ed69f3dc622d058235936ace2b104fa2fbcb86e840e9f35ac"
+content-hash = "5cefd99786b02319cd63492f5a6e8fdd3a7ccbb26cdccfc7b11752e246cf8bef"
