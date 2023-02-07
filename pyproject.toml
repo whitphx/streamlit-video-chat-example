@@ -9,7 +9,7 @@ license = "MIT"
 python = ">=3.7,<3.11,!=3.9.7"  # 3.9.7 is excluded due to https://github.com/streamlit/streamlit/pull/5168
 streamlit = "^1.5.1"
 streamlit-webrtc = "^0.43.4"
-streamlit-server-state = "^0.14.2"
+streamlit-server-state = "^0.15.0"
 opencv-python-headless = "^4.5.2"
 
 [tool.poetry.dev-dependencies]
