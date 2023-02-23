@@ -10,7 +10,7 @@ python = ">=3.7,<3.11,!=3.9.7"  # 3.9.7 is excluded due to https://github.com/st
 streamlit = "^1.5.1"
 streamlit-webrtc = "^0.43.4"
 streamlit-server-state = "^0.14.2"
-opencv-python-headless = "^4.5.2"
+opencv-python-headless = "^4.7.0"
 
 [tool.poetry.dev-dependencies]
 black = "^21.12b0"
