@@ -25,11 +25,10 @@ jobs:
 
     - name: Install dependencies
       run: uv sync --locked
-    - name: Lint with black, isort, and flake8
+    - name: Lint and format with Ruff
       run: |
-        uv run black . --check
-        uv run isort . --check
-        uv run flake8
+        uv run ruff format --check .
+        uv run ruff check .
     - name: Type checking with mypy
       run: |
         uv run mypy .
