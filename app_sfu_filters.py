@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 import streamlit as st
 from streamlit_server_state import server_state, server_state_lock
-from streamlit_webrtc import ClientSettings, WebRtcMode, webrtc_streamer
+from streamlit_webrtc import WebRtcMode, webrtc_streamer
 
 cv2_path = Path(cv2.__file__).parent
 
@@ -60,17 +60,17 @@ def overlay_bgra(background: np.ndarray, overlay: np.ndarray, roi):
     mask = resized_overlay[:, :, 3]
 
     overlaid_area = background[ov_y : ov_y + ov_h, ov_x : ov_x + ov_w]
-    overlaid_area[:] = np.where(mask[:, :, np.newaxis], foreground, overlaid_area)
+    np.copyto(overlaid_area, foreground, where=mask[:, :, np.newaxis].astype(bool))
 
 
-@st.experimental_singleton
+@st.cache_resource
 def get_face_classifier():
     return cv2.CascadeClassifier(
         str(cv2_path / "data/haarcascade_frontalface_alt2.xml")
     )
 
 
-@st.experimental_singleton
+@st.cache_resource
 def get_filters():
     return {
         "ironman": imread_from_url(
@@ -109,7 +109,7 @@ def main():
 
         overlay = filters[filter_type]
 
-        for (x, y, w, h) in faces:
+        for x, y, w, h in faces:
             # Ad-hoc adjustment of the ROI for each filter type
             if filter_type == "ironman":
                 roi = (x, y, w, h)
@@ -120,19 +120,15 @@ def main():
             overlay_bgra(img, overlay, roi)
 
             if draw_rect:
-                img = cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+                cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
         return av.VideoFrame.from_ndarray(img, format="bgr24")
 
     self_ctx = webrtc_streamer(
         key="self",
         mode=WebRtcMode.SENDRECV,
-        client_settings=ClientSettings(
-            rtc_configuration={
-                "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
-            },
-            media_stream_constraints={"video": True, "audio": True},
-        ),
+        rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
+        media_stream_constraints={"video": True, "audio": True},
         video_frame_callback=video_frame_callback,
         sendback_audio=False,
     )
@@ -154,15 +150,13 @@ def main():
         webrtc_streamer(
             key=str(id(ctx)),
             mode=WebRtcMode.RECVONLY,
-            client_settings=ClientSettings(
-                rtc_configuration={
-                    "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
-                },
-                media_stream_constraints={
-                    "video": True,
-                    "audio": True,
-                },
-            ),
+            rtc_configuration={
+                "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
+            },
+            media_stream_constraints={
+                "video": True,
+                "audio": True,
+            },
             source_audio_track=ctx.output_audio_track,
             source_video_track=ctx.output_video_track,
             desired_playing_state=ctx.state.playing,

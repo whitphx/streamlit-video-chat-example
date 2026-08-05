@@ -1,5 +1,5 @@
 from streamlit_server_state import server_state, server_state_lock
-from streamlit_webrtc import ClientSettings, WebRtcMode, webrtc_streamer
+from streamlit_webrtc import WebRtcMode, webrtc_streamer
 
 
 def main():
@@ -9,12 +9,8 @@ def main():
     self_ctx = webrtc_streamer(
         key="self",
         mode=WebRtcMode.SENDRECV,
-        client_settings=ClientSettings(
-            rtc_configuration={
-                "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
-            },
-            media_stream_constraints={"video": True, "audio": True},
-        ),
+        rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
+        media_stream_constraints={"video": True, "audio": True},
         sendback_audio=False,
     )
 
@@ -35,15 +31,13 @@ def main():
         webrtc_streamer(
             key=str(id(ctx)),
             mode=WebRtcMode.RECVONLY,
-            client_settings=ClientSettings(
-                rtc_configuration={
-                    "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
-                },
-                media_stream_constraints={
-                    "video": True,
-                    "audio": True,
-                },
-            ),
+            rtc_configuration={
+                "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
+            },
+            media_stream_constraints={
+                "video": True,
+                "audio": True,
+            },
             source_audio_track=ctx.output_audio_track,
             source_video_track=ctx.output_video_track,
             desired_playing_state=ctx.state.playing,

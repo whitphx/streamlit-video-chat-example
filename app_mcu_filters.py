@@ -2,12 +2,7 @@ import logging
 import math
 import urllib.request
 from pathlib import Path
-from typing import List
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal  # type: ignore
+from typing import List, Literal
 
 import av
 import cv2
@@ -77,7 +72,7 @@ def overlay_bgra(background: np.ndarray, overlay: np.ndarray, roi):
     mask = resized_overlay[:, :, 3]
 
     overlaid_area = background[ov_y : ov_y + ov_h, ov_x : ov_x + ov_w]
-    overlaid_area[:] = np.where(mask[:, :, np.newaxis], foreground, overlaid_area)
+    np.copyto(overlaid_area, foreground, where=mask[:, :, np.newaxis].astype(bool))
 
 
 class FaceOverlayProcessor(VideoProcessorBase):
@@ -113,7 +108,7 @@ class FaceOverlayProcessor(VideoProcessorBase):
 
         overlay = self._filters[self.filter_type]
 
-        for (x, y, w, h) in faces:
+        for x, y, w, h in faces:
             # Ad-hoc adjustment of the ROI for each filter type
             if self.filter_type == "ironman":
                 roi = (x, y, w, h)
@@ -124,7 +119,7 @@ class FaceOverlayProcessor(VideoProcessorBase):
             overlay_bgra(img, overlay, roi)
 
             if self.draw_rect:
-                img = cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+                cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
         return av.VideoFrame.from_ndarray(img, format="bgr24")
 
