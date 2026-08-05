@@ -18,37 +18,16 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-  "black>=26.5.1,<27",
-  "flake8>=7.3.0,<8",
-  "isort>=8.0.1,<9",
   "mypy>=2.3.0,<3",
+  "ruff>=0.16.1,<0.17",
 ]
 
 [tool.uv]
 package = false
 
-[tool.black]
+[tool.ruff]
 line-length = 88
-target-version = ['py310']
-exclude = '''
+target-version = "py310"
 
-(
-  /(
-      \.eggs         # exclude a few common directories in the
-    | \.git          # root of the project
-    | \.hg
-    | \.mypy_cache
-    | \.tox
-    | \.venv
-    | _build
-    | buck-out
-    | build
-    | dist
-  )/
-)
-'''
-
-[tool.isort]
-# https://pycqa.github.io/isort/docs/configuration/black_compatibility/
-profile = "black"
-multi_line_output = 3
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
